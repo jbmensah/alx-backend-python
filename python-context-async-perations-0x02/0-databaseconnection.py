@@ -35,6 +35,6 @@ class DatabaseConnection:
 if __name__ == "__main__":
 	with DatabaseConnection() as conn:
 		cursor = conn.cursor()
-		cursor.execute("SELECT * FROM user_data")
+		cursor.execute("SELECT * FROM users")
 		for row in cursor:
 			print(row)
