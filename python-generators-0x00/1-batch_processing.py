@@ -33,3 +33,4 @@ def batch_processing(batch_size):
 			# age is Decimal, compare > 25
 			if user.get('age', 0) > 25:
 				print(user)
+	return
