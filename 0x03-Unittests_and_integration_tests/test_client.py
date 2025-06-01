@@ -90,6 +90,21 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_get_json.assert_called_once_with(fake_url)
             self.assertEqual(result, ["repo1", "repo2"])
 
+    @parameterized.expand([
+        ({"license": {"key": "my_license"}}, "my_license", True),
+        ({"license": {"key": "other_license"}}, "my_license", False),
+    ])
+    def test_has_license(self, repo, license_key, expected):
+        """
+        Test that has_license(repo, license_key) returns the expected boolean.
+        - When repo['license']['key'] matches license_key → True
+        - Otherwise → False
+        """
+        # 1) Call the static method has_license
+        result = GithubOrgClient.has_license(repo, license_key)
+
+        # 2) Check that it equals the expected boolean
+        self.assertEqual(result, expected)
 
 if __name__ == "__main__":
     unittest.main()
