@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-# tests/test_utils.py
-
 import unittest
 from parameterized import parameterized
 from unittest.mock import patch, Mock
@@ -106,5 +104,46 @@ class TestGetJson(unittest.TestCase):
 
 
 class TestMemoize(unittest.TestCase):
-	"""Test suite for memoize decorator (Milestone 2)."""
-	# (Fill in as you work on Task 2…)
+	"""Test suite for the memoize decorator (Milestone 3)."""
+
+	def test_memoize(self):
+		"""
+		Define a small TestClass with:
+		- a_method() returning 42
+		- a_property() decorated with @memoize, which calls a_method()
+
+		Patch a_method so we can count its calls, then call a_property()
+		twice and verify that a_method is invoked only once.
+		"""
+
+		# 1) Define the class inside the test method so the patch decorator can target it.
+		class TestClass:
+			def a_method(self):
+				return 42
+
+			@memoize
+			def a_property(self):
+				return self.a_method()
+
+		# 2) Create an instance of TestClass
+		test_obj = TestClass()
+
+		# 3) Patch the a_method on our TestClass
+		with patch.object(TestClass, "a_method", autospec=True) as mock_a_method:
+			# 3a) Configure the mock to return 42 when called
+			mock_a_method.return_value = 42
+
+			# 4) First call to a_property() should invoke a_method once
+			first_result = test_obj.a_property()
+			self.assertEqual(first_result, 42)
+			mock_a_method.assert_called_once_with(test_obj)
+
+			# 5) Reset the call count on the mock, so we can measure the second invocation
+			mock_a_method.reset_mock()
+
+			# 6) Second call to a_property() (exact same arguments) should NOT invoke a_method again
+			second_result = test_obj.a_property()
+			self.assertEqual(second_result, 42)
+
+			# Verify that a_method was NOT called this time:
+			mock_a_method.assert_not_called()
