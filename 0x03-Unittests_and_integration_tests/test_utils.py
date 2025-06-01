@@ -36,7 +36,8 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map_exception(self, nested_map, path, missing_key):
         """
-        Test that access_nested_map raises KeyError when any key in path is missing.
+        Test that access_nested_map raises KeyError when any key in 
+        path is missing.
         We use assertRaises as a context manager and then verify that
         the KeyError’s .args[0] matches the missing key.
         """
@@ -58,7 +59,8 @@ class TestGetJson(unittest.TestCase):
     def test_get_json(self, test_url, test_payload, mock_get):
         """
         For each (test_url, test_payload):
-        - Patch requests.get so it returns a Mock whose .json() gives test_payload.
+        - Patch requests.get so it returns a Mock whose .json() 
+        gives test_payload.
         - Call get_json(test_url) and verify:
           1) requests.get was called exactly once with test_url.
           2) get_json returned test_payload.
@@ -90,10 +92,13 @@ class TestMemoize(unittest.TestCase):
         """
         Define a small TestClass with:
         - a_method() returning 42
-        - a_property() decorated with @memoize, which calls a_method()
+        - a_property() decorated with @memoize, which 
+        calls a_method()
 
-        Patch a_method so we can count its calls, then call a_property()
-        twice and verify that a_method is invoked only once.
+        Patch a_method so we can count its calls, then 
+        call a_property()
+        twice and verify that a_method is invoked only 
+        once.
         """
 
         # 1) Define the class inside the test method so the patch decorator can target it.
