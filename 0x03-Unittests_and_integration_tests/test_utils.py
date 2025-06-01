@@ -35,12 +35,9 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": {}}, ("a", "b"), "b"),
     ])
     def test_access_nested_map_exception(self, nested_map, path, missing_key):
-        """
-        Test that access_nested_map raises KeyError when a key is missing.
-        """
+        """Test that access_nested_map raises KeyError when key is missing."""
         with self.assertRaises(KeyError) as ctx:
             access_nested_map(nested_map, path)
-
         # ctx.exception.args[0] is the missing key
         self.assertEqual(ctx.exception.args[0], missing_key)
 
@@ -61,9 +58,8 @@ class TestGetJson(unittest.TestCase):
           1) requests.get called once with test_url.
           2) get_json returns test_payload.
         """
-        # Create a fake response object
         fake_response = Mock()
-        # Simulate successful status (raise_for_status does nothing)
+        # Simulate success (raise_for_status does nothing)
         fake_response.raise_for_status.return_value = None
         # When .json() is called, return our payload
         fake_response.json.return_value = test_payload
@@ -88,14 +84,13 @@ class TestMemoize(unittest.TestCase):
         """
         Define TestClass with:
         - a_method() returns 42
-        - a_property() decorated with @memoize
-          that calls a_method()
+        - a_property() decorated with @memoize that calls a_method()
 
-        Patch a_method to count calls, then call a_property()
-        twice, verifying a_method is called only once.
+        Patch a_method to count calls, then call a_property twice,
+        verifying a_method is called only once.
         """
 
-        # Define class inside test method so we can patch a_method
+        # Define class inside test so we can patch a_method
         class TestClass:
             def a_method(self):
                 return 42
@@ -104,7 +99,7 @@ class TestMemoize(unittest.TestCase):
             def a_property(self):
                 return self.a_method()
 
-        # Create an instance of TestClass
+        # Create instance of TestClass
         test_obj = TestClass()
 
         # Patch TestClass.a_method to monitor calls
@@ -112,7 +107,7 @@ class TestMemoize(unittest.TestCase):
             # Configure mock to return 42
             mock_a_method.return_value = 42
 
-            # First call to a_property(): should call a_method once
+            # First call: a_property() should call a_method once
             first_result = test_obj.a_property()
             self.assertEqual(first_result, 42)
             mock_a_method.assert_called_once_with(test_obj)
@@ -120,7 +115,7 @@ class TestMemoize(unittest.TestCase):
             # Reset call count to test second access
             mock_a_method.reset_mock()
 
-            # Second call to a_property(): should not invoke a_method again
+            # Second call: a_property() should not invoke a_method again
             second_result = test_obj.a_property()
             self.assertEqual(second_result, 42)
             mock_a_method.assert_not_called()
