@@ -104,7 +104,8 @@ class TestMemoize(unittest.TestCase):
 
         # Patch TestClass.a_method to monitor calls
         with patch.object(
-            TestClass, "a_method", autospec=True) as mock_a_method:
+            TestClass, "a_method", autospec=True
+            ) as mock_a_method:
             # Configure mock to return 42
             mock_a_method.return_value = 42
 
