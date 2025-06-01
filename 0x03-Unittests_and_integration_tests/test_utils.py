@@ -101,7 +101,8 @@ class TestMemoize(unittest.TestCase):
         once.
         """
 
-        # 1) Define the class inside the test method so the patch decorator can target it.
+        # 1) Define the class inside the test method so the 
+		# patch decorator can target it.
         class TestClass:
             def a_method(self):
                 return 42
@@ -114,7 +115,8 @@ class TestMemoize(unittest.TestCase):
         test_obj = TestClass()
 
         # 3) Patch the a_method on our TestClass
-        with patch.object(TestClass, "a_method", autospec=True) as mock_a_method:
+        with patch.object(TestClass, "a_method", 
+                          autospec=True) as mock_a_method:
             # 3a) Configure the mock to return 42 when called
             mock_a_method.return_value = 42
 
@@ -123,10 +125,12 @@ class TestMemoize(unittest.TestCase):
             self.assertEqual(first_result, 42)
             mock_a_method.assert_called_once_with(test_obj)
 
-            # 5) Reset the call count on the mock, so we can measure the second invocation
+            # 5) Reset the call count on the mock, so we can measure
+			#  the second invocation
             mock_a_method.reset_mock()
 
-            # 6) Second call to a_property() (exact same arguments) should NOT invoke a_method again
+            # 6) Second call to a_property() (exact same arguments) 
+			# should NOT invoke a_method again
             second_result = test_obj.a_property()
             self.assertEqual(second_result, 42)
 
