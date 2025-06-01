@@ -46,6 +46,35 @@ class TestGithubOrgClient(unittest.TestCase):
         # 6) Verify .org() returned fake_payload:
         self.assertEqual(result, fake_payload)
 
+class TestPublicReposURL(unittest.TestCase):
+    """Test suite for mocking the readonly _public_repos_url property."""
+
+    def test_public_repos_url(self):
+        """
+        1) Patch GithubOrgClient.org to return a fake dict with "repos_url".
+        2) Access client._public_repos_url.
+        3) Assert:
+           - org() was called exactly once.
+           - The property returned the fake URL.
+        """
+        # 1) Create a fake dictionary that org() will return
+        fake_repos_url = "https://api.github.com/orgs/fake-org/repos"
+        fake_org_data = {"repos_url": fake_repos_url}
+
+        # 2) Patch GithubOrgClient.org so it returns fake_org_data
+        with patch.object(GithubOrgClient, "org", return_value=fake_org_data) as mock_org:
+            # 3a) Instantiate the client
+            client = GithubOrgClient("fake-org")
+
+            # 3b) Access the readonly property
+            result = client._public_repos_url
+
+            # 3c) Verify org() was called exactly once
+            mock_org.assert_called_once_with(client)
+
+            # 3d) Verify the property returned the fake URL
+            self.assertEqual(result, fake_repos_url)
+
 
 if __name__ == "__main__":
     unittest.main()
