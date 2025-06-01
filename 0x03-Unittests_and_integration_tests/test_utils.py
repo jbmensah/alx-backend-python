@@ -41,35 +41,68 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
-	"""Test suite for get_json (Milestone 1: mocking HTTP)."""
+	# """Test suite for get_json (Milestone 1: mocking HTTP)."""
 
-	@patch('utils.requests.get')
-	def test_get_json_success(self, mock_get):
-		expected_payload = {"some": "data"}
+	# @patch('utils.requests.get')
+	# def test_get_json_success(self, mock_get):
+	# 	expected_payload = {"some": "data"}
+	# 	fake_response = Mock()
+	# 	fake_response.raise_for_status.return_value = None
+	# 	fake_response.json.return_value = expected_payload
+
+	# 	mock_get.return_value = fake_response
+
+	# 	url = "http://example.com/fake-endpoint"
+	# 	result = get_json(url)
+
+	# 	mock_get.assert_called_once_with(url)
+	# 	self.assertEqual(result, expected_payload)
+
+	# @patch('utils.requests.get')
+	# def test_get_json_error(self, mock_get):
+	# 	fake_response = Mock()
+	# 	fake_response.raise_for_status.side_effect = requests.HTTPError("Not Found")
+
+	# 	mock_get.return_value = fake_response
+
+	# 	url = "http://example.com/bad-endpoint"
+	# 	with self.assertRaises(requests.HTTPError):
+	# 		get_json(url)
+
+	# 	mock_get.assert_called_once_with(url)
+	"""Test suite for utils.get_json using mocked HTTP calls."""
+
+	@parameterized.expand([
+		("http://example.com", {"payload": True}),
+		("http://holberton.io", {"payload": False}),
+	])
+	@patch("utils.requests.get")
+	def test_get_json(self, test_url, test_payload, mock_get):
+		"""
+		For each (test_url, test_payload):
+		- Patch requests.get so it returns a Mock whose .json() gives test_payload.
+		- Call get_json(test_url) and verify:
+		1) requests.get was called exactly once with test_url.
+		2) get_json returned test_payload.
+		"""
+		# 1. Create a fake response object
 		fake_response = Mock()
+		# Simulate a successful status (so raise_for_status() does nothing)
 		fake_response.raise_for_status.return_value = None
-		fake_response.json.return_value = expected_payload
+		# When .json() is called, return our test_payload
+		fake_response.json.return_value = test_payload
 
+		# 2. Configure the patched requests.get to return our fake_response
 		mock_get.return_value = fake_response
 
-		url = "http://example.com/fake-endpoint"
-		result = get_json(url)
+		# 3. Call get_json; no real HTTP call is made
+		result = get_json(test_url)
 
-		mock_get.assert_called_once_with(url)
-		self.assertEqual(result, expected_payload)
+		# 4. Verify requests.get was called exactly once with test_url
+		mock_get.assert_called_once_with(test_url)
 
-	@patch('utils.requests.get')
-	def test_get_json_error(self, mock_get):
-		fake_response = Mock()
-		fake_response.raise_for_status.side_effect = requests.HTTPError("Not Found")
-
-		mock_get.return_value = fake_response
-
-		url = "http://example.com/bad-endpoint"
-		with self.assertRaises(requests.HTTPError):
-			get_json(url)
-
-		mock_get.assert_called_once_with(url)
+		# 5. Verify the returned value matches test_payload
+		self.assertEqual(result, test_payload)
 
 
 class TestMemoize(unittest.TestCase):
