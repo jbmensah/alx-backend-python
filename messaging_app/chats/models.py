@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=128)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=150)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
 
     def __str__(self):
         return self.username
